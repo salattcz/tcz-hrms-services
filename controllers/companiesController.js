@@ -23,3 +23,39 @@ export const register = async (req,res) => {
         res.status(500).json({message:"Something went wrong..."});
     }
 }
+
+const verifyJWT = async (req, res, next) => {
+    try {
+    //   let {
+    //     user: { contactDetails },
+    //   } = req;
+  
+      const companyObj = {
+        name: _.get(req.body, 'name', ''),
+        email: _.get(req.body, 'email'),
+        description: _.get(req.body, 'description'),
+        contactNumber: _.get(req.body, 'contactNumber'),
+        companyLogo: _.get(req.body, 'companyLogo', ''),
+        _id: _.get(req.body, '_id', ''),
+        admins: {
+          adminMail: _.get(req.body, 'admins.adminMail', ''),
+        },
+        subscriptionPeriod: _.get(req.body, 'subscriptionPeriod'),
+        subscriptionType: _.get(req.body, 'subscriptionType')
+      };
+  
+      const returnObj = responseObject.create({
+        code: 200,
+        message: 'Valid JWT Token',
+        success: true,
+        data: companyObj,
+      });
+      return res.send(returnObj);
+    } catch (error) {
+      const { message } = error;
+      logger.error(`Error in verifyJWT: ${message}`);
+      return next(new AppError(message, 401));
+    }
+  };
+
+  
