@@ -58,4 +58,69 @@ const verifyJWT = async (req, res, next) => {
     }
   };
 
+  const generateNewToken = catchAsync(async (req, res, next) => {
+    const {
+      body: { _id, refreshToken },
+    //   headers: { app_id = 1 },
+    } = req;
   
+    /* This code is looking for a user session that has a refresh token that matches the one passed in. */
+    let foundUserSessions = await SessionDetailSchema.findOne({
+      userGUID: _id,
+      refreshToken,
+    }).populate('_id', '_id email accountStatus name guid');
+  
+    /* The above code is checking if the refresh token is valid. If it is not valid, then it will return an
+     error. */
+    if (!foundUserSessions) return next(new AppError('Invalid refresh token', 401));
+  
+    let { refreshTokenExpiry } = foundUserSessions;
+  
+    const expiryDate = moment(refreshTokenExpiry);
+  
+    /* This code is checking if the current time is before the expiry date. */
+    let isAfter = moment().isBefore(expiryDate);
+  
+    /* This code is checking if the token is expired or not. */
+    if (!isAfter) return next(new AppError('Refresh Token Expired', 402));
+  
+    const {
+      browser: savedbrowser,
+      version: savedversion,
+      os: savedos,
+      platform: savedplatform,
+      source: savedsource,
+    } = foundUserSessions.deviceDetails;
+  
+    const { browser, version, os, platform, source } = req.useragent;
+  
+    /* The above code is checking if the user is using a different browser, version, os, platform, or
+     source than the one they used last time. If they are, it will return an error. */
+    if (
+      browser !== savedbrowser ||
+      version !== savedversion ||
+      os !== savedos ||
+      platform !== savedplatform ||
+      source !== savedsource
+    )
+      return next(new AppError('Invalid Device', 403));
+  
+    /* The above code is generating a JWT token for the user. */
+    const token = await generateJWT(foundUserSessions.userId, app_id, foundUserSessions.sessionId);
+  
+    /* Adding 180 days to the current date and storing it in the session.refreshTokenExpiry variable. */
+    foundUserSessions.refreshTokenExpiry = moment().add(180, 'days');
+  
+    /* This code is setting the foundUserSessions.accessToken to the token that we got from the login. */
+    foundUserSessions.accessToken = `JWT ${token}`;
+  
+    await foundUserSessions.save();
+  
+    const returnObj = responseObject.create({
+      code: 200,
+      message: 'Success',
+      success: true,
+      data: `JWT ${token}`,
+    });
+    return res.send(returnObj);
+  });
