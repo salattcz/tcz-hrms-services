@@ -1,19 +1,41 @@
 {
-  "name": "tcz-hrms-services",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/salattcz/tcz-hrms-services.git"
-  },
-  "author": "Sal's MERN team",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/salattcz/tcz-hrms-services/issues"
-  },
-  "homepage": "https://github.com/salattcz/tcz-hrms-services#readme"
+    "name": "tcz-hrms-services",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon index.js",
+        "format:check": "prettier --check .",
+        "format:write": "prettier --write .",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint --fix ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/salattcz/tcz-hrms-services.git"
+    },
+    "author": "Sal's MERN team",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/salattcz/tcz-hrms-services/issues"
+    },
+    "homepage": "https://github.com/salattcz/tcz-hrms-services#readme",
+    "devDependencies": {
+        "eslint": "^8.21.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "prettier": "^2.7.1"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.5.1",
+        "nodemon": "^2.0.19",
+        "rand-token": "^1.0.1",
+        "uuid": "^8.3.2"
+    }
 }
