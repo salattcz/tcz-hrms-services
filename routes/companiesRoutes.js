@@ -1,8 +1,14 @@
-import express from 'express';
-import { register } from '../controllers/companiesController.js';
+import express from 'express'
+import {
+    register,
+    generateNewToken,
+    login,
+} from '../controllers/companiesController.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/register", register);
+router.post('/register', register)
+router.post('/generate-token', generateNewToken)
+router.post('/login', login)
 
-export default router;
+export default router
