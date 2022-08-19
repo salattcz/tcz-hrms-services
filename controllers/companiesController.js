@@ -125,8 +125,6 @@ export const generateNewToken = async (req, res, next) => {
     /* Adding 180 days to the current date and storing it in the session.refreshTokenExpiry variable. */
     foundUserSessions.refreshTokenExpiry = moment().add(180, 'days')
 
-    /* Adding 180 days to the current date and storing it in the session.refreshTokenExpiry variable. */
-
     /* This code is setting the foundUserSessions.accessToken to the token that we got from the login. */
     await sessionDetails.findByIdAndUpdate(foundUserSessions._id, {$set:{accessToken: `JWT ${token}`}})
 
