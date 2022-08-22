@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import companiesRoutes from './routes/companiesRoutes.js'
+import companiesRoutes from './routes/companiesRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+
 const app = express();
 dotenv.config();
 app.use(express.json({limit:"30mb" , extended:true}))
@@ -15,6 +17,8 @@ app.get('/',(req,res)=>{
 })
 
 app.use("/companies", companiesRoutes);
+app.use("/user", userRoutes);
+
 const PORT = process.env.PORT || 5000;
 const DB_URL = process.env.CONNECTION_URL;
 
