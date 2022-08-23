@@ -1,5 +1,11 @@
 import mongoose from 'mongoose'
 
+const contactSchema = mongoose.Schema({
+    email: String,
+    username: { type: String, required: true },
+    emailVerified: { type: Boolean, default: 'false' },
+    mobileNumber: { type: String, required: true },
+})
 const userSchema = mongoose.Schema({
     empNo: { type: String },
     role: { type: String, required: true },
@@ -7,14 +13,7 @@ const userSchema = mongoose.Schema({
     gender: { type: String, required: true },
     dob: { type: Date },
     companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'companies' },
-    contactDetails: [
-        {
-            email: { type: String, required: true },
-            username: { type: String, required: true },
-            emailVerified: { type: Boolean, default: 'false' },
-            mobileNumber: { type: String, required: true },
-        },
-    ],
+    contactDetails: contactSchema,
     profilePicture: { data: Buffer, contentType: String, default: {} },
     jobTitle: { type: String, required: true },
     department: { type: String, required: true },
@@ -27,14 +26,11 @@ const userSchema = mongoose.Schema({
             banDetails: [{ type: String }],
         },
     ],
-    address: [
-        {
-            permanentAddress: { type: String, required: true },
-            mailingAddress: { type: String, required: true },
-        },
-    ],
-    password: { type: String, required: true },
+    address: { type: Array, default: [] },
+    password: { type: String },
     about: { type: String, default: '' },
     currentProjects: [{ type: String }],
     bloodGroup: { type: String },
 })
+
+export default mongoose.model('users', userSchema)

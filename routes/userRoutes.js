@@ -16,6 +16,6 @@ app.get('/', (req, res) => {
 })
 
 router.post('/csvtojson', upload.single('file'), csvtojson)
-router.post('/add-user',addUsers);
+router.post('/add-users', upload.single('file'), addUsers);
 
 export default router;

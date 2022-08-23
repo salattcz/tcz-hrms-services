@@ -29,6 +29,7 @@
         "prettier": "^2.7.1"
     },
     "dependencies": {
+        "bcryptjs": "^2.4.3",
         "buffer": "^6.0.3",
         "cors": "^2.8.5",
         "csv-writer": "^1.6.0",
