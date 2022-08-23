@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs'
 import csv from 'csvtojson'
 import moment from 'moment/moment.js'
 
@@ -38,7 +37,6 @@ export const addUsers = async (req, res) => {
                         mailingAddress: userObj.mailingAddress,
                     },
                 ],
-
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
