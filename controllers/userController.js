@@ -11,12 +11,17 @@ export const addUsers = async (req, res) => {
             .then((jsonObj) => {
                 return jsonObj
             })
-        userObjs.map(async (userObj)=>{
-            const existingUser = await users.findOne({ email: userObj.email })
+        for (var x in userObjs) {
+            var userObj = userObjs[x]
+            let existingUser = await users.findOne({'contactDetails.email': userObj.email})
             if (existingUser) {
-                return res.json({ message: 'User already exists' })
+                x++;
+                // res.json({
+                //     message:
+                //         'User already exists with userId: ' + existingUser._id,
+                // })
+                continue;
             }
-
             const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate()
             const user = await users.create({
                 name: userObj.name,
@@ -40,11 +45,12 @@ export const addUsers = async (req, res) => {
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
-                password: userObj.name.split(" ")[0].toLowerCase() + 123,
+                // password: userObj.name.split(' ')[0].toLowerCase() + 123,
             })
+            x++;
             user.save()
-        })
-        return res.json('success')
+        }
+        // return res.json('success')
     } catch (error) {
         console.log(error)
     }
