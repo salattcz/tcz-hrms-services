@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
     about: { type: String, default: '' },
     currentProjects: [{ type: String }],
     bloodGroup: { type: String },
+    assignedCalendar: {
+        type: mongoose.Schema.Types.String,
+        ref: 'holidaycalendar',
+    },
 })
 
 export default mongoose.model('users', userSchema)

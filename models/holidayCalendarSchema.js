@@ -7,4 +7,4 @@ const holidayCalendarSchema = mongoose.Schema({
     calendarName: { type: String },
 })
 
-export default mongoose.model('holidays', holidayCalendarSchema)
+export default mongoose.model('holidayCalendar', holidayCalendarSchema)

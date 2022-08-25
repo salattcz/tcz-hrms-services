@@ -45,12 +45,13 @@ export const addUsers = async (req, res) => {
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
-                // password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                assignedCalendar: userObj.assignedCalendar
             })
             x++;
             user.save()
         }
-        // return res.json('success')
+        return res.json('success')
     } catch (error) {
         console.log(error)
     }
