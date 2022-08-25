@@ -56,3 +56,7 @@ export const addUsers = async (req, res) => {
         console.log(error)
     }
 }
+
+export const updateUserByAdmin = async (req,res) =>{
+    
+}
