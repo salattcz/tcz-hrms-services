@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
     jobTitle: { type: String, required: true },
     department: { type: String, required: true },
     reportingManager: { type: String },
-    team: [{ type: String, default: '' }],
+    team: { type: Array, default: [] },
     documents: [
         {
             aadhar: { type: String },

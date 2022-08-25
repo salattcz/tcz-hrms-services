@@ -13,14 +13,16 @@ export const addUsers = async (req, res) => {
             })
         for (var x in userObjs) {
             var userObj = userObjs[x]
-            let existingUser = await users.findOne({'contactDetails.email': userObj.email})
+            let existingUser = await users.findOne({
+                'contactDetails.email': userObj.email,
+            })
             if (existingUser) {
-                x++;
+                x++
                 // res.json({
                 //     message:
                 //         'User already exists with userId: ' + existingUser._id,
                 // })
-                continue;
+                continue
             }
             const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate()
             const user = await users.create({
@@ -46,9 +48,9 @@ export const addUsers = async (req, res) => {
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
                 password: userObj.name.split(' ')[0].toLowerCase() + 123,
-                assignedCalendar: userObj.assignedCalendar
+                assignedCalendar: userObj.assignedCalendar,
             })
-            x++;
+            x++
             user.save()
         }
         return res.json('success')
@@ -57,6 +59,18 @@ export const addUsers = async (req, res) => {
     }
 }
 
-export const updateUserByAdmin = async (req,res) =>{
-    
+export const updateUserByAdmin = async (req, res) => {
+    const { _id, reportingManager, currentProjects, team } = req.body
+    try {
+        const updatedUser = await users.findByIdAndUpdate(_id, {
+            $set: {
+                reportingManager: reportingManager,
+                currentProjects: currentProjects,
+                team: team,
+            },
+        })
+        res.send(updatedUser)
+    } catch (error) {
+        console.log(error)
+    }
 }
