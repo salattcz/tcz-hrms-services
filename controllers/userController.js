@@ -60,17 +60,21 @@ export const addUsers = async (req, res) => {
 }
 
 export const updateUserByAdmin = async (req, res) => {
-    const { _id, reportingManager, currentProjects, team } = req.body
+    const data = req.body
     try {
-        const updatedUser = await users.findByIdAndUpdate(_id, {
-            $set: {
-                reportingManager: reportingManager,
-                currentProjects: currentProjects,
-                team: team,
-            },
+        const updatedUser = await users.findByIdAndUpdate(data._id, {
+            $set: data,
         })
         res.send(updatedUser)
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const updateUserBySelf = async (req,res) => {
+    try {
+        
+    } catch (error) {
+        
     }
 }
