@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { v4 as uuid } from 'uuid'
 import randToken from 'rand-token'
-import mongoose from 'mongoose'
 
 import companies from '../models/companiesSchema.js'
 import sessionDetails from '../models/sessionDetailsSchema.js'
@@ -36,7 +35,7 @@ export const register = async (req, res) => {
         const token = jwt.sign(
             { email: newCompany.email, id: newCompany._id },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '72h' }
         )
         const refreshToken = randToken.uid(56)
         const refreshTokenExpiry = moment().add(180, 'days')

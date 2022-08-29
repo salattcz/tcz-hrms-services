@@ -1,8 +1,13 @@
 import csv from 'csvtojson'
 import moment from 'moment/moment.js'
 import csvwriter from 'csv-writer'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid'
+import randToken from 'rand-token'
 
-import users from '../models/userSchema.js'
+import users from '../models/userSchema.js';
+import sessionDetails from '../models/sessionDetailsSchema.js'
 
 var createCsvWriter = csvwriter.createObjectCsvWriter
 
@@ -116,5 +121,46 @@ export const addUsers = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(400).json(error.message)
+    }
+}
+
+export const adminLogin = async (req, res) => {
+    const { email, password } = req.body
+    try {
+        let existingUser = await users.findOne({
+            'contactDetails.email': email,
+        })
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+        if (existingUser.role !== 'admin') {
+            return res.status(400).json({ message: 'User is not an admin' })
+        }
+        // const isPasswordCorrect = await bcrypt.compare(
+        //     password,
+        //     existingUser.password
+        // )
+        if (password !== existingUser.password) {
+            return res.status(400).json({ message: 'Invalid password' })
+        }
+        const token = jwt.sign(
+            { email: existingUser.contactDetails.email, id: existingUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        )
+        const sessionId = uuid()
+        const refreshToken = randToken.uid(56)
+        const refreshTokenExpiry = moment().add(180, 'days')
+
+        await sessionDetails.create({
+            sessionId,
+            companyId: existingUser._id,
+            accessToken: token,
+            refreshToken,
+            refreshTokenExpiry,
+        });
+        res.status(200).json({ result: existingUser, token, refreshToken })
+    } catch (error) {
+        console.log(error);
     }
 }
