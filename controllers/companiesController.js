@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { v4 as uuid } from 'uuid'
 import randToken from 'rand-token'
-import mongoose from 'mongoose'
 
 import companies from '../models/companiesSchema.js'
 import sessionDetails from '../models/sessionDetailsSchema.js'
@@ -17,6 +16,13 @@ export const register = async (req, res) => {
         subscPeriod,
         subscType,
     } = req.body
+
+    const adminMails = admins.replace(/\s/g, '').split(',');
+
+    adminMails.map((mail, index)=>{
+        adminMails[index] = {adminMail: mail};
+    })
+
     try {
         const sessionId = uuid()
         const existingCompany = await companies.findOne({ email })
@@ -29,7 +35,7 @@ export const register = async (req, res) => {
             email,
             description,
             contactNumber,
-            admins,
+            admins: adminMails,
             subscriptionPeriod: subscPeriod,
             subscriptionType: subscType,
         })
@@ -117,8 +123,10 @@ export const generateNewToken = async (req, res, next) => {
 
     /* The above code is generating a JWT token for the user. */
     const token = jwt.sign(
-        {companyId:foundUserSessions.companyId,
-        sessionId:foundUserSessions.sessionId},
+        {
+            companyId: foundUserSessions.companyId,
+            sessionId: foundUserSessions.sessionId,
+        },
         process.env.JWT_SECRET
     )
 
@@ -126,7 +134,9 @@ export const generateNewToken = async (req, res, next) => {
     foundUserSessions.refreshTokenExpiry = moment().add(180, 'days')
 
     /* This code is setting the foundUserSessions.accessToken to the token that we got from the login. */
-    await sessionDetails.findByIdAndUpdate(foundUserSessions._id, {$set:{accessToken: `JWT ${token}`}})
+    await sessionDetails.findByIdAndUpdate(foundUserSessions._id, {
+        $set: { accessToken: `JWT ${token}` },
+    })
 
     // await foundUserSessions.save();
 
@@ -136,7 +146,7 @@ export const generateNewToken = async (req, res, next) => {
         success: true,
         data: `JWT ${token}`,
     }
-    return res.send(returnObj);
+    return res.send(returnObj)
 }
 
 export const login = async (req, res) => {}
