@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema(
         profilePicture: { data: Buffer, contentType: String, default: {} },
         jobTitle: { type: String, required: true },
         department: { type: String, required: true },
-        reportingManager: { type: String, required: true },
+        reportingManager: { type: String },
         team: [{ type: String, default: '' }],
         documents: [
             {

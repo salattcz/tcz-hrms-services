@@ -124,6 +124,37 @@ export const addUsers = async (req, res) => {
     }
 }
 
+export const addSingleUser = async (req,res) => {
+    const {name, dob, gender, email, department, mobileNumber, username, jobTitle, role} = req.body
+    try {
+        let existingUser = await users.findOne({
+            'contactDetails.email': email,
+        });
+        if(existingUser) {
+            return res.status(400).json({message: "User already exists"});
+        }
+        const dobFinal = moment.utc(dob, 'DD-MM-YYYY').toDate()
+        const user = await users.create({
+            name: name,
+            role: role,
+            gender: gender,
+            dob: dobFinal,
+            contactDetails: {
+                email: email,
+                username: username,
+                mobileNumber: mobileNumber,
+            },
+            jobTitle: jobTitle,
+            department: department,
+            password: name.split(' ')[0].toLowerCase() + 123,
+        })
+        user.save();
+        res.status(200).json({message:"Success"});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const adminLogin = async (req, res) => {
     const { email, password } = req.body
     try {
@@ -154,7 +185,7 @@ export const adminLogin = async (req, res) => {
 
         await sessionDetails.create({
             sessionId,
-            companyId: existingUser._id,
+            userId: existingUser._id,
             accessToken: token,
             refreshToken,
             refreshTokenExpiry,
