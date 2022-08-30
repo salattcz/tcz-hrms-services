@@ -1,12 +1,12 @@
 import csv from 'csvtojson'
 import moment from 'moment/moment.js'
 import csvwriter from 'csv-writer'
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { v4 as uuid } from 'uuid'
 import randToken from 'rand-token'
 
-import users from '../models/userSchema.js';
+import users from '../models/userSchema.js'
 import sessionDetails from '../models/sessionDetailsSchema.js'
 
 var createCsvWriter = csvwriter.createObjectCsvWriter
@@ -124,14 +124,24 @@ export const addUsers = async (req, res) => {
     }
 }
 
-export const addSingleUser = async (req,res) => {
-    const {name, dob, gender, email, department, mobileNumber, username, jobTitle, role} = req.body
+export const addSingleUser = async (req, res) => {
+    const {
+        name,
+        dob,
+        gender,
+        email,
+        department,
+        mobileNumber,
+        username,
+        jobTitle,
+        role,
+    } = req.body
     try {
         let existingUser = await users.findOne({
             'contactDetails.email': email,
-        });
-        if(existingUser) {
-            return res.status(400).json({message: "User already exists"});
+        })
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' })
         }
         const dobFinal = moment.utc(dob, 'DD-MM-YYYY').toDate()
         const user = await users.create({
@@ -148,10 +158,10 @@ export const addSingleUser = async (req,res) => {
             department: department,
             password: name.split(' ')[0].toLowerCase() + 123,
         })
-        user.save();
-        res.status(200).json({message:"Success"});
+        user.save()
+        res.status(200).json({ message: 'Success' })
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
@@ -189,15 +199,15 @@ export const adminLogin = async (req, res) => {
             accessToken: token,
             refreshToken,
             refreshTokenExpiry,
-        });
+        })
         res.status(200).json({ result: existingUser, token, refreshToken })
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
 export const employeeLogin = async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body
     try {
         let existingUser = await users.findOne({
             'contactDetails.email': email,
@@ -206,7 +216,9 @@ export const employeeLogin = async (req, res) => {
             return res.status(404).json({ message: 'User not found' })
         }
         if (existingUser.role !== 'employee') {
-            return res.status(400).json({ message: 'User is not registered as employee' })
+            return res
+                .status(400)
+                .json({ message: 'User is not registered as employee' })
         }
         if (password !== existingUser.password) {
             return res.status(400).json({ message: 'Invalid password' })
@@ -226,9 +238,7 @@ export const employeeLogin = async (req, res) => {
             accessToken: token,
             refreshToken,
             refreshTokenExpiry,
-        });
+        })
         res.status(200).json({ result: existingUser, token, refreshToken })
-    } catch (error) {
-        
-    }
+    } catch (error) {}
 }

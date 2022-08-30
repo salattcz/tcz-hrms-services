@@ -32,6 +32,7 @@ const userSchema = mongoose.Schema(
         about: { type: String, default: '' },
         currentProjects: [{ type: String }],
         bloodGroup: { type: String },
+        isActive:{type:Boolean, default:true}
     },
     { timestamps: true }
 )
