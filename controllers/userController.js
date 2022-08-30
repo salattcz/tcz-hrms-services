@@ -195,3 +195,40 @@ export const adminLogin = async (req, res) => {
         console.log(error);
     }
 }
+
+export const employeeLogin = async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        let existingUser = await users.findOne({
+            'contactDetails.email': email,
+        })
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+        if (existingUser.role !== 'employee') {
+            return res.status(400).json({ message: 'User is not registered as employee' })
+        }
+        if (password !== existingUser.password) {
+            return res.status(400).json({ message: 'Invalid password' })
+        }
+        const token = jwt.sign(
+            { email: existingUser.contactDetails.email, id: existingUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        )
+        const sessionId = uuid()
+        const refreshToken = randToken.uid(56)
+        const refreshTokenExpiry = moment().add(180, 'days')
+
+        await sessionDetails.create({
+            sessionId,
+            userId: existingUser._id,
+            accessToken: token,
+            refreshToken,
+            refreshTokenExpiry,
+        });
+        res.status(200).json({ result: existingUser, token, refreshToken })
+    } catch (error) {
+        
+    }
+}
