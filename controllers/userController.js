@@ -242,3 +242,22 @@ export const employeeLogin = async (req, res) => {
         res.status(200).json({ result: existingUser, token, refreshToken })
     } catch (error) {}
 }
+
+export const deleteUser = async (req, res) => {
+    const { email, userId } = req.body
+    try {
+        //    const user = await users.find({ $and: [{'contactDetails.email':email}, {_id:userId} ]})
+        const existedUser = await users.findOne({
+            'contactDetails.email': email,
+        })
+        if (!existedUser) {
+            return res.status(400).json({ message: "User doesn't exists" })
+        }
+        const updatedUser = await users.findByIdAndUpdate(userId, {
+            $set: { isActive: false },
+        })
+        res.status(200).json({ message: 'User deleted successfully' })
+    } catch (error) {
+        console.log(error)
+    }
+}
