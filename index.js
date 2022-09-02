@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import companiesRoutes from './routes/companiesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import encryptionRoutes from './routes/encryptionRoutes.js'
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.get('/',(req,res)=>{
 
 app.use("/companies", companiesRoutes);
 app.use("/user", userRoutes);
+app.use("/e&d", encryptionRoutes)
 
 const PORT = process.env.PORT || 5000;
 const DB_URL = process.env.CONNECTION_URL;
