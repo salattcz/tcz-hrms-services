@@ -262,3 +262,13 @@ export const deleteUser = async (req, res) => {
         console.log(error)
     }
 }
+
+export const getAllUsers = async (req, res) => {
+    const {limit:limit, skip:skip} = req.params;
+    try {
+        const allUsers = await users.find().skip(skip).limit(limit);
+        res.status(200).json(allUsers);
+    } catch (error) {
+        console.log(error);
+    }
+}
