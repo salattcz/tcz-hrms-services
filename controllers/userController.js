@@ -239,7 +239,8 @@ export const employeeLogin = async (req, res) => {
             refreshToken,
             refreshTokenExpiry,
         })
-        res.status(200).json({ result: existingUser, token, refreshToken })
+        const userRole = existingUser.role;
+        res.status(200).json({ result: existingUser, userRole, token, refreshToken })
     } catch (error) {}
 }
 
@@ -256,7 +257,7 @@ export const deleteUser = async (req, res) => {
         const updatedUser = await users.findByIdAndUpdate(userId, {
             $set: { isActive: false },
         })
-        res.status(200).json({ message: 'User deleted successfully' })
+        res.status(200).json(updatedUser)
     } catch (error) {
         console.log(error)
     }
