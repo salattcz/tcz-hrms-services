@@ -38,3 +38,14 @@ export const addHolidayCalendar = async (req, res) => {
         console.log(error)
     }
 }
+
+
+export const getAllCalendars = async (req, res) => {
+    const {limit:limit, skip:skip} = req.params;
+    try {
+        const allCalendars = await users.find().skip(skip).limit(limit);
+        res.status(200).json(allCalendars);
+    } catch (error) {
+        console.log(error);
+    }
+}
