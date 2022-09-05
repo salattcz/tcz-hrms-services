@@ -6,6 +6,7 @@ import multer from 'multer';
 
 import { csvtojson } from '../controllers/csvToJsonController.js';
 import { addSingleUser, addUsers, adminLogin, deleteUser, employeeLogin, getAllUsers } from '../controllers/userController.js';
+import auth from '../middlewares/auth.js';
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -24,6 +25,6 @@ router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);
 router.get('/get-all-users/:skip/:limit', getAllUsers);
-router.patch('/delete-user', deleteUser);
+router.patch('/delete-user',auth, deleteUser);
 
 export default router;
