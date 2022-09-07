@@ -3,7 +3,7 @@ import {
     register,
     generateNewToken,
     login,
-} from '../controllers/companiesController.js'
+} from '../controllers/companiesController.js';
 
 const router = express.Router();
 
