@@ -1,18 +1,18 @@
-import csv from 'csvtojson'
-import moment from 'moment/moment.js'
-import csvwriter from 'csv-writer'
+import csv from 'csvtojson';
+import moment from 'moment/moment.js';
+import csvwriter from 'csv-writer';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { v4 as uuid } from 'uuid'
-import randToken from 'rand-token'
+import { v4 as uuid } from 'uuid';
+import randToken from 'rand-token';
 
 import users from '../models/userSchema.js';
-import sessionDetails from '../models/sessionDetailsSchema.js'
+import sessionDetails from '../models/sessionDetailsSchema.js';
 
-var createCsvWriter = csvwriter.createObjectCsvWriter
+var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
-    const filePath = req.file.path
+    const filePath = req.file.path;
     const csvWriter = createCsvWriter({
         // Output csv file name is geek_data
         path: 'user_data_summary.csv',
@@ -38,44 +38,44 @@ export const addUsers = async (req, res) => {
             { id: 'message', title: 'message' },
             { id: 'mongoId', title: 'mongoId' },
         ],
-    })
+    });
     try {
         const userObjs = await csv()
             .fromFile(filePath)
             .then((jsonObj) => {
-                return jsonObj
-            })
-        var status
-        var message
-        var mongoId
+                return jsonObj;
+            });
+        var status;
+        var message;
+        var mongoId;
         for (var x in userObjs) {
-            var userObj = userObjs[x]
+            var userObj = userObjs[x];
             let existingUser = await users.findOne({
                 'contactDetails.email': userObj.email,
-            })
+            });
             if (existingUser) {
-                x++
+                x++;
                 // res.json({
                 //     message:
                 //         'User already exists with userId: ' + existingUser._id,
                 // })
-                status = 'failed'
-                message = 'user already exists'
-                mongoId = existingUser._id.toString()
+                status = 'failed';
+                message = 'user already exists';
+                mongoId = existingUser._id.toString();
                 var newField = {
                     status: status,
                     message: message,
                     mongoId: mongoId,
-                }
-                var records = [{ ...userObj, ...newField }]
+                };
+                var records = [{ ...userObj, ...newField }];
                 csvWriter
                     .writeRecords(records)
                     .then(() =>
                         console.log('Data uploaded into csv successfully')
-                    )
-                continue
+                    );
+                continue;
             }
-            const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate()
+            const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate();
             const user = await users.create({
                 name: userObj.name,
                 role: userObj.role,
@@ -99,58 +99,58 @@ export const addUsers = async (req, res) => {
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
                 // password: userObj.name.split(' ')[0].toLowerCase() + 123,
-            })
-            x++
-            status = 'success'
-            message = 'successfully added'
-            user.save()
-            mongoId = user._id.toString()
+            });
+            x++;
+            status = 'success';
+            message = 'successfully added';
+            user.save();
+            mongoId = user._id.toString();
 
             var newField = {
                 status: status,
                 message: message,
                 mongoId: mongoId,
-            }
-            var records = [{ ...userObj, ...newField }]
+            };
+            var records = [{ ...userObj, ...newField }];
             csvWriter
                 .writeRecords(records)
-                .then(() => console.log('Data uploaded into csv successfully'))
+                .then(() => console.log('Data uploaded into csv successfully'));
         }
 
-        res.json('success')
+        res.json('success');
     } catch (error) {
-        console.log(error)
-        res.status(400).json(error.message)
+        console.log(error);
+        res.status(400).json(error.message);
     }
-}
+};
 
 export const adminLogin = async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     try {
         let existingUser = await users.findOne({
             'contactDetails.email': email,
-        })
+        });
         if (!existingUser) {
-            return res.status(404).json({ message: 'User not found' })
+            return res.status(404).json({ message: 'User not found' });
         }
         if (existingUser.role !== 'admin') {
-            return res.status(400).json({ message: 'User is not an admin' })
+            return res.status(400).json({ message: 'User is not an admin' });
         }
         // const isPasswordCorrect = await bcrypt.compare(
         //     password,
         //     existingUser.password
         // )
         if (password !== existingUser.password) {
-            return res.status(400).json({ message: 'Invalid password' })
+            return res.status(400).json({ message: 'Invalid password' });
         }
         const token = jwt.sign(
             { email: existingUser.contactDetails.email, id: existingUser._id },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
-        )
-        const sessionId = uuid()
-        const refreshToken = randToken.uid(56)
-        const refreshTokenExpiry = moment().add(180, 'days')
+        );
+        const sessionId = uuid();
+        const refreshToken = randToken.uid(56);
+        const refreshTokenExpiry = moment().add(180, 'days');
 
         await sessionDetails.create({
             sessionId,
@@ -159,8 +159,8 @@ export const adminLogin = async (req, res) => {
             refreshToken,
             refreshTokenExpiry,
         });
-        res.status(200).json({ result: existingUser, token, refreshToken })
+        res.status(200).json({ result: existingUser, token, refreshToken });
     } catch (error) {
         console.log(error);
     }
-}
+};
