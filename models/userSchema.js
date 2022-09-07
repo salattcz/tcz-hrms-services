@@ -1,11 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const contactSchema = mongoose.Schema({
     email: String,
     username: { type: String, required: true },
     emailVerified: { type: Boolean, default: 'false' },
     mobileNumber: { type: String, required: true },
-})
+});
 const userSchema = mongoose.Schema(
     {
         empNo: { type: String },
@@ -32,9 +32,9 @@ const userSchema = mongoose.Schema(
         about: { type: String, default: '' },
         currentProjects: [{ type: String }],
         bloodGroup: { type: String },
-        isActive:{type:Boolean, default:true}
+        isActive: { type: Boolean, default: true },
     },
     { timestamps: true }
-)
+);
 
-export default mongoose.model('users', userSchema)
+export default mongoose.model('users', userSchema);

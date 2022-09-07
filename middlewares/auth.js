@@ -9,10 +9,9 @@ const auth = (req, res, next) => {
         req.body.role = decodeData?.role;
 
         next();
-
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
 export default auth;
