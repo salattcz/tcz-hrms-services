@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const SessionDetailSchema = mongoose.Schema(
     {
@@ -15,6 +15,6 @@ const SessionDetailSchema = mongoose.Schema(
     {
         timestamps: true,
     }
-)
+);
 
-export default mongoose.model('sessionDetails', SessionDetailSchema)
+export default mongoose.model('sessionDetails', SessionDetailSchema);

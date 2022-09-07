@@ -3,28 +3,37 @@ import crypto from 'crypto';
 //**AES-256**
 
 //encryption
-export const aesEncryption = async (plainText, key, outputEncoding = 'base64') => {
+export const aesEncryption = async (
+    plainText,
+    key,
+    outputEncoding = 'base64'
+) => {
     try {
-        const cipher = crypto.createCipheriv('aes-128-ecb', key, null)
+        const cipher = crypto.createCipheriv('aes-128-ecb', key, null);
         return Buffer.concat([
             cipher.update(plainText),
             cipher.final(),
-        ]).toString(outputEncoding)
+        ]).toString(outputEncoding);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
-
-//decryption
-export const aesDecryption = async (cipherText, key, outputEncoding = "utf8") => {
-    const cipher = crypto.createDecipheriv("aes-128-ecb", key, null);
-    return Buffer.concat([cipher.update(cipherText), cipher.final()]).toString(outputEncoding);
 };
 
+//decryption
+export const aesDecryption = async (
+    cipherText,
+    key,
+    outputEncoding = 'utf8'
+) => {
+    const cipher = crypto.createDecipheriv('aes-128-ecb', key, null);
+    return Buffer.concat([cipher.update(cipherText), cipher.final()]).toString(
+        outputEncoding
+    );
+};
 
 //**SHA-256**/
 
-const secret = 'abcdefg'
+const secret = 'abcdefg';
 
 //encryption
 export const shaEncryption = async (password) => {
@@ -32,12 +41,12 @@ export const shaEncryption = async (password) => {
         const hash = crypto
             .createHash('sha256', secret)
             .update(password)
-            .digest('base64')
+            .digest('base64');
         return hash;
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
 //decryption
 

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const companiesSchema = mongoose.Schema(
     {
@@ -19,6 +19,6 @@ const companiesSchema = mongoose.Schema(
         },
     },
     { timestamps: true }
-)
+);
 
-export default mongoose.model('companies', companiesSchema)
+export default mongoose.model('companies', companiesSchema);
