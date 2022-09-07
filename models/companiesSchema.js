@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const companiesSchema = mongoose.Schema({
     name: { type: String, required: true },
@@ -16,6 +16,6 @@ const companiesSchema = mongoose.Schema({
         data: Buffer,
         contentType: String,
     },
-})
+});
 
-export default mongoose.model('companies', companiesSchema)
+export default mongoose.model('companies', companiesSchema);
