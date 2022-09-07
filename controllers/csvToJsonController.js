@@ -1,8 +1,7 @@
-import csv from 'csvtojson'
+import csv from 'csvtojson';
 import csvwriter from 'csv-writer';
-import Blob from 'buffer'
 
-var createCsvWriter = csvwriter.createObjectCsvWriter
+var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const csvtojson = async (req, res) => {
     const filePath = req.file.path;
@@ -31,26 +30,26 @@ export const csvtojson = async (req, res) => {
             { id: 'bloodGroup', title: 'bloodGroup' },
             { id: 'status', title: 'status' },
         ],
-    })
+    });
     try {
-        const status = "success";
-        const objs= await csv()
+        const status = 'success';
+        const objs = await csv()
             .fromFile(filePath)
-            .then((jsonObj) =>
-                {return jsonObj}
-            )
-        
-        var newField = {status: status}
-        var records = objs.map((obj)=>{return {...obj,...newField}});
+            .then((jsonObj) => {
+                return jsonObj;
+            });
+
+        var newField = { status: status };
+        var records = objs.map((obj) => {
+            return { ...obj, ...newField };
+        });
 
         csvWriter
-                    .writeRecords(records)
-                    .then(() =>
-                        console.log('Data uploaded into csv successfully')
-                    )
-        return res.status(200).json({ message: 'Converted successfully' })
+            .writeRecords(records)
+            .then(() => console.log('Data uploaded into csv successfully'));
+        return res.status(200).json({ message: 'Converted successfully' });
     } catch (error) {
-        console.log(error)
-        return res.status(400).json({ message: error.message })
+        console.log(error);
+        return res.status(400).json({ message: error.message });
     }
-}
+};

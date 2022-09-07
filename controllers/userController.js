@@ -1,30 +1,30 @@
-import csv from 'csvtojson'
-import moment from 'moment/moment.js'
+import csv from 'csvtojson';
+import moment from 'moment/moment.js';
 
-import users from '../models/userSchema.js'
+import users from '../models/userSchema.js';
 
 export const addUsers = async (req, res) => {
-    const filePath = req.file.path
+    const filePath = req.file.path;
     try {
         const userObjs = await csv()
             .fromFile(filePath)
             .then((jsonObj) => {
-                return jsonObj
-            })
+                return jsonObj;
+            });
         for (var x in userObjs) {
-            var userObj = userObjs[x]
+            var userObj = userObjs[x];
             let existingUser = await users.findOne({
                 'contactDetails.email': userObj.email,
-            })
+            });
             if (existingUser) {
-                x++
+                x++;
                 // res.json({
                 //     message:
                 //         'User already exists with userId: ' + existingUser._id,
                 // })
-                continue
+                continue;
             }
-            const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate()
+            const dob = moment.utc(userObj.dob, 'DD-MM-YYYY').toDate();
             const user = await users.create({
                 name: userObj.name,
                 role: userObj.role,
@@ -49,32 +49,29 @@ export const addUsers = async (req, res) => {
                 about: userObj.about,
                 password: userObj.name.split(' ')[0].toLowerCase() + 123,
                 assignedCalendar: userObj.assignedCalendar,
-            })
-            x++
-            user.save()
+            });
+            x++;
+            user.save();
         }
-        return res.json('success')
+        return res.json('success');
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
 export const updateUserByAdmin = async (req, res) => {
-    const data = req.body
+    const data = req.body;
     try {
         const updatedUser = await users.findByIdAndUpdate(data._id, {
             $set: data,
-        })
-        res.send(updatedUser)
+        });
+        res.send(updatedUser);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
-export const updateUserBySelf = async (req,res) => {
+export const updateUserBySelf = async (req, res) => {
     try {
-        
-    } catch (error) {
-        
-    }
-}
+    } catch (error) {}
+};

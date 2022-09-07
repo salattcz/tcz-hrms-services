@@ -1,11 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const contactSchema = mongoose.Schema({
     email: String,
     username: { type: String, required: true },
     emailVerified: { type: Boolean, default: 'false' },
     mobileNumber: { type: String, required: true },
-})
+});
 const userSchema = mongoose.Schema({
     empNo: { type: String },
     role: { type: String, required: true },
@@ -35,6 +35,6 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.String,
         ref: 'holidaycalendar',
     },
-})
+});
 
-export default mongoose.model('users', userSchema)
+export default mongoose.model('users', userSchema);
