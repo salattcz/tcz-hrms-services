@@ -206,13 +206,24 @@ export const adminLogin = async (req, res) => {
 };
 
 export const employeeLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { companyEmail, email, password } = req.body;
     try {
-        let existingUser = await users.findOne({
-            'contactDetails.email': email,
-        });
+        let existingUser = await users
+            .findOne({
+                'contactDetails.email': email,
+            })
+            .populate({
+                path: 'companyId',
+                model: 'companies',
+                select: 'email',
+            });
         if (!existingUser) {
             return res.status(404).json({ message: 'User not found' });
+        }
+        if (existingUser.companyId.email !== companyEmail) {
+            return res
+                .status(400)
+                .json({ message: 'User does not belong to this company' });
         }
         if (existingUser.role !== 'employee') {
             return res
