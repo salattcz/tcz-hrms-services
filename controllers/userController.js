@@ -276,3 +276,13 @@ export const getAllUsers = async (req, res) => {
         console.log(error);
     }
 };
+
+export const getUser = async (req, res) => {
+    const { id: _id } = req.params;
+    try {
+        const user = await users.findById(_id);
+        return res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+    }
+};

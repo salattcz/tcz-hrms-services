@@ -12,6 +12,7 @@ import {
     deleteUser,
     employeeLogin,
     getAllUsers,
+    getUser,
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);
 router.get('/get-all-users/:skip/:limit', getAllUsers);
+router.get('/get-user/:id', getUser);
 router.patch('/delete-user', deleteUser);
 
 export default router;
