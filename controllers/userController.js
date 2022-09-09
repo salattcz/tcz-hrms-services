@@ -227,7 +227,7 @@ export const employeeLogin = async (req, res) => {
         }
         if (existingUser.role !== 'employee') {
             return res
-                .status(400)
+                .status(401)
                 .json({ message: 'User is not registered as employee' });
         }
         if (password !== existingUser.password) {
