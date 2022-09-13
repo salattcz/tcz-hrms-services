@@ -62,7 +62,7 @@ export const addUsers = async (req, res) => {
 export const updateUserByAdmin = async (req, res) => {
     const data = req.body;
     try {
-        const updatedUser = await users.findByIdAndUpdate(data._id, {
+        const updatedUser = await users.findByIdAndUpdate(data.userId, {
             $set: data,
         });
         res.send(updatedUser);
