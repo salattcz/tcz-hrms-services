@@ -1,0 +1,4 @@
+Sr,name,role,gender,dob,email,username,mobileNumber,jobTitle,department,reportingManager,permanentAddress,mailingAddress,about,currentProjects,bloodGroup,status,message,mongoId
+1,Mahak Agarwal,employee,female,23-04-2001,mahak.agarwal@techchefz.com,mahakagarwal248,8941027873,intern,mern,saloni sikdar,bareilly,bareilly,,HRMS,o+,success,successfully added,6307406cb6fd5cd3d9602e9b
+2,Lakshya Meghlan,employee,male,05-08-2001,lakshya.meghlan@techchefz.com,lakshaymeghaln,8941027873,intern,mern,saloni sikdar,delhi,delhi,,HRMS,,failed,user already exists,63073f935eeba2a010ed9e12
+3,Nishant Chikkara,employee,male,14-09-2001,nishant.chikkara@techchefz.com,nishantchikkara,8941027873,intern,mern,saloni sikdar,hariyana,hariyana,,HRMS,,failed,user already exists,63074018c495343161a0c6a2

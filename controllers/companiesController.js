@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import randToken from 'rand-token';
-import mongoose from 'mongoose';
 
 import companies from '../models/companiesSchema.js';
 import sessionDetails from '../models/sessionDetailsSchema.js';
