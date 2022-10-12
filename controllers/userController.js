@@ -1,7 +1,13 @@
 import csv from 'csvtojson';
 import moment from 'moment/moment.js';
 import csvwriter from 'csv-writer';
+
+import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
+import randToken from 'rand-token';
+
 import users from '../models/userSchema.js';
+import sessionDetails from '../models/sessionDetailsSchema.js';
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -265,6 +271,16 @@ export const deleteUser = async (req, res) => {
             $set: { isActive: false },
         });
         res.status(200).json(updatedUser);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getAllUsers = async (req, res) => {
+    const { limit: limit, skip: skip } = req.params;
+    try {
+        const allUsers = await users.find().skip(skip).limit(limit);
+        res.status(200).json(allUsers);
     } catch (error) {
         console.log(error);
     }

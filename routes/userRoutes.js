@@ -5,13 +5,13 @@ import multer from 'multer';
 // import paramValidation from '../config/paramValidations.js';
 
 import { csvtojson } from '../controllers/csvToJsonController.js';
-
 import {
     addSingleUser,
     addUsers,
     adminLogin,
     deleteUser,
     employeeLogin,
+    getAllUsers,
 } from '../controllers/userController.js';
 
 
@@ -31,6 +31,7 @@ router.post('/add-users', upload.single('file'), addUsers);
 router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);
+router.get('/get-all-users/:skip/:limit', getAllUsers);
 router.patch('/delete-user', deleteUser);
 
 export default router;

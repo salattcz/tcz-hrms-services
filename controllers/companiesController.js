@@ -43,7 +43,6 @@ export const register = async (req, res) => {
             { email: newCompany.email, id: newCompany._id },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
-
         );
         const refreshToken = randToken.uid(56);
         const refreshTokenExpiry = moment().add(180, 'days');
