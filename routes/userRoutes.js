@@ -12,8 +12,8 @@ import {
     deleteUser,
     employeeLogin,
     getAllUsers,
+    getUser,
 } from '../controllers/userController.js';
-import auth from '../middlewares/auth.js';
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -28,10 +28,12 @@ app.get('/', (req, res) => {
 
 router.post('/csvtojson', upload.single('file'), csvtojson);
 router.post('/add-users', upload.single('file'), addUsers);
+router.patch('/updateUserByAdmin', updateUserByAdmin);
 router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);
 router.get('/get-all-users/:skip/:limit', getAllUsers);
 router.patch('/delete-user', auth, deleteUser);
+router.get('/get-user/:id', getUser);
 
 export default router;

@@ -8,6 +8,11 @@ import randToken from 'rand-token';
 import users from '../models/userSchema.js';
 import sessionDetails from '../models/sessionDetailsSchema.js';
 
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
+import randToken from 'rand-token';
+
 var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
@@ -97,9 +102,11 @@ export const addUsers = async (req, res) => {
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
-                // password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                assignedCalendar: userObj.assignedCalendar,
             });
             x++;
+            user.save();
             status = 'success';
             message = 'successfully added';
             user.save();
@@ -115,7 +122,6 @@ export const addUsers = async (req, res) => {
                 .writeRecords(records)
                 .then(() => console.log('Data uploaded into csv successfully'));
         }
-
         res.json('success');
     } catch (error) {
         console.log(error);
@@ -161,6 +167,7 @@ export const addSingleUser = async (req, res) => {
         res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error);
+        res.status(400).json(error.message);
     }
 };
 
@@ -206,17 +213,28 @@ export const adminLogin = async (req, res) => {
 };
 
 export const employeeLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { companyEmail, email, password } = req.body;
     try {
-        let existingUser = await users.findOne({
-            'contactDetails.email': email,
-        });
+        let existingUser = await users
+            .findOne({
+                'contactDetails.email': email,
+            })
+            .populate({
+                path: 'companyId',
+                model: 'companies',
+                select: 'email',
+            });
         if (!existingUser) {
             return res.status(404).json({ message: 'User not found' });
         }
-        if (existingUser.role !== 'employee') {
+        if (existingUser.companyId.email !== companyEmail) {
             return res
                 .status(400)
+                .json({ message: 'User does not belong to this company' });
+        }
+        if (existingUser.role !== 'employee') {
+            return res
+                .status(401)
                 .json({ message: 'User is not registered as employee' });
         }
         if (password !== existingUser.password) {
@@ -275,4 +293,31 @@ export const getAllUsers = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+};
+
+export const getUser = async (req, res) => {
+    const { id: _id } = req.params;
+    try {
+        const user = await users.findById(_id);
+        return res.status(200).json(user);
+     }catch(error){
+        console.log(error);
+     }
+ }
+
+export const updateUserByAdmin = async (req, res) => {
+    const data = req.body;
+    try {
+        const updatedUser = await users.findByIdAndUpdate(data.userId, {
+            $set: data,
+        });
+        res.send(updatedUser);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const updateUserBySelf = async (req, res) => {
+    try {
+    } catch (error) {}
 };
