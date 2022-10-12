@@ -5,7 +5,7 @@ import multer from 'multer';
 // import paramValidation from '../config/paramValidations.js';
 
 import { csvtojson } from '../controllers/csvToJsonController.js';
-import { addUsers } from '../controllers/userController.js';
+import { addUsers, adminLogin } from '../controllers/userController.js';
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -20,5 +20,6 @@ app.get('/', (req, res) => {
 
 router.post('/csvtojson', upload.single('file'), csvtojson);
 router.post('/add-users', upload.single('file'), addUsers);
+router.post('/admin-login', adminLogin);
 
 export default router;

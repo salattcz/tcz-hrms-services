@@ -22,7 +22,6 @@ export const register = async (req, res) => {
     adminMails.map((mail, index) => {
         adminMails[index] = { adminMail: mail };
     });
-
     try {
         const sessionId = uuid();
         const existingCompany = await companies.findOne({ email });

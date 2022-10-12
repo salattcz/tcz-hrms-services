@@ -6,6 +6,7 @@ const contactSchema = mongoose.Schema({
     emailVerified: { type: Boolean, default: 'false' },
     mobileNumber: { type: String, required: true },
 });
+
 const userSchema = mongoose.Schema({
     empNo: { type: String },
     role: { type: String, required: true },
@@ -36,5 +37,6 @@ const userSchema = mongoose.Schema({
         ref: 'holidaycalendar',
     },
 });
+
 
 export default mongoose.model('users', userSchema);
