@@ -16,6 +16,12 @@ export const register = async (req, res) => {
         subscPeriod,
         subscType,
     } = req.body;
+
+    const adminMails = admins.replace(/\s/g, '').split(',');
+
+    adminMails.map((mail, index) => {
+        adminMails[index] = { adminMail: mail };
+    });
     try {
         const sessionId = uuid();
         const existingCompany = await companies.findOne({ email });
@@ -28,7 +34,7 @@ export const register = async (req, res) => {
             email,
             description,
             contactNumber,
-            admins,
+            admins: adminMails,
             subscriptionPeriod: subscPeriod,
             subscriptionType: subscType,
         });

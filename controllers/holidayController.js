@@ -1,9 +1,11 @@
 import csv from 'csvtojson';
+import moment from 'moment';
 
 import holidayCalendar from '../models/holidayCalendarSchema.js';
 
 export const addHolidayCalendar = async (req, res) => {
     const filePath = req.file.path;
+    const { createdBy, calendarName } = req.body;
     try {
         const holidayDetails = await csv()
             .fromFile(filePath)
@@ -31,6 +33,19 @@ export const addHolidayCalendar = async (req, res) => {
         holidays.save();
 
         res.send('success');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getAllCalendars = async (req, res) => {
+    const { limit: limit, skip: skip } = req.params;
+    try {
+        const allCalendars = await holidayCalendar
+            .find()
+            .skip(skip)
+            .limit(limit);
+        res.status(200).json(allCalendars);
     } catch (error) {
         console.log(error);
     }
