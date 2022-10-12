@@ -1,12 +1,13 @@
 import csv from 'csvtojson';
 import moment from 'moment/moment.js';
 import csvwriter from 'csv-writer';
+import users from '../models/userSchema.js';
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import randToken from 'rand-token';
 
-import users from '../models/userSchema.js';
 import sessionDetails from '../models/sessionDetailsSchema.js';
 
 var createCsvWriter = csvwriter.createObjectCsvWriter;
@@ -98,7 +99,8 @@ export const addUsers = async (req, res) => {
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
-                // password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                assignedCalendar: userObj.assignedCalendar,
             });
             x++;
             status = 'success';
@@ -116,7 +118,6 @@ export const addUsers = async (req, res) => {
                 .writeRecords(records)
                 .then(() => console.log('Data uploaded into csv successfully'));
         }
-
         res.json('success');
     } catch (error) {
         console.log(error);
@@ -162,6 +163,7 @@ export const addSingleUser = async (req, res) => {
         res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error);
+        res.status(400).json(error.message);
     }
 };
 
