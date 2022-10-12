@@ -35,7 +35,7 @@ export const register = async (req, res) => {
         const token = jwt.sign(
             { email: newCompany.email, id: newCompany._id },
             process.env.JWT_SECRET,
-            { expiresIn: '72h' }
+            { expiresIn: '1h' }
         );
         const refreshToken = randToken.uid(56);
         const refreshTokenExpiry = moment().add(180, 'days');
