@@ -1,7 +1,6 @@
 import csv from 'csvtojson';
 import moment from 'moment/moment.js';
 import csvwriter from 'csv-writer';
-
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import randToken from 'rand-token';
@@ -15,7 +14,6 @@ import { v4 as uuid } from 'uuid';
 import randToken from 'rand-token';
 
 import sessionDetails from '../models/sessionDetailsSchema.js';
-
 var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
@@ -216,17 +214,28 @@ export const adminLogin = async (req, res) => {
 };
 
 export const employeeLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { companyEmail, email, password } = req.body;
     try {
-        let existingUser = await users.findOne({
-            'contactDetails.email': email,
-        });
+        let existingUser = await users
+            .findOne({
+                'contactDetails.email': email,
+            })
+            .populate({
+                path: 'companyId',
+                model: 'companies',
+                select: 'email',
+            });
         if (!existingUser) {
             return res.status(404).json({ message: 'User not found' });
         }
-        if (existingUser.role !== 'employee') {
+        if (existingUser.companyId.email !== companyEmail) {
             return res
                 .status(400)
+                .json({ message: 'User does not belong to this company' });
+        }
+        if (existingUser.role !== 'employee') {
+            return res
+                .status(401)
                 .json({ message: 'User is not registered as employee' });
         }
         if (password !== existingUser.password) {
@@ -287,6 +296,16 @@ export const getAllUsers = async (req, res) => {
     }
 };
 
+export const getUser = async (req, res) => {
+    const { id: _id } = req.params;
+    try {
+        const user = await users.findById(_id);
+        return res.status(200).json(user);
+     }catch(error){
+        console.log(error);
+     }
+ }
+
 export const updateUserByAdmin = async (req, res) => {
     const data = req.body;
     try {
@@ -303,4 +322,3 @@ export const updateUserBySelf = async (req, res) => {
     try {
     } catch (error) {}
 };
-
