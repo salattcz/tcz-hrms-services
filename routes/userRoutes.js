@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
 
 router.post('/csvtojson', upload.single('file'), csvtojson);
 router.post('/add-users', upload.single('file'), addUsers);
+router.patch('/updateUserByAdmin', updateUserByAdmin);
 router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);

@@ -8,6 +8,12 @@ import randToken from 'rand-token';
 import users from '../models/userSchema.js';
 import sessionDetails from '../models/sessionDetailsSchema.js';
 
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
+import randToken from 'rand-token';
+
+import sessionDetails from '../models/sessionDetailsSchema.js';
 var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
@@ -97,9 +103,11 @@ export const addUsers = async (req, res) => {
                 currentProjects: userObj.currentProjects,
                 bloodGroup: userObj.bloodGroup,
                 about: userObj.about,
-                // password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                password: userObj.name.split(' ')[0].toLowerCase() + 123,
+                assignedCalendar: userObj.assignedCalendar,
             });
             x++;
+            user.save();
             status = 'success';
             message = 'successfully added';
             user.save();
@@ -115,7 +123,6 @@ export const addUsers = async (req, res) => {
                 .writeRecords(records)
                 .then(() => console.log('Data uploaded into csv successfully'));
         }
-
         res.json('success');
     } catch (error) {
         console.log(error);
@@ -161,6 +168,7 @@ export const addSingleUser = async (req, res) => {
         res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error);
+        res.status(400).json(error.message);
     }
 };
 
@@ -293,7 +301,24 @@ export const getUser = async (req, res) => {
     try {
         const user = await users.findById(_id);
         return res.status(200).json(user);
+     }catch(error){
+        console.log(error);
+     }
+ }
+
+export const updateUserByAdmin = async (req, res) => {
+    const data = req.body;
+    try {
+        const updatedUser = await users.findByIdAndUpdate(data.userId, {
+            $set: data,
+        });
+        res.send(updatedUser);
     } catch (error) {
         console.log(error);
     }
+};
+
+export const updateUserBySelf = async (req, res) => {
+    try {
+    } catch (error) {}
 };
