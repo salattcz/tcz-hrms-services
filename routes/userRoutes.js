@@ -33,7 +33,7 @@ router.post('/add-single-user', addSingleUser);
 router.post('/admin-login', adminLogin);
 router.post('/employee-login', employeeLogin);
 router.get('/get-all-users/:skip/:limit', getAllUsers);
+router.patch('/delete-user', auth, deleteUser);
 router.get('/get-user/:id', getUser);
-router.patch('/delete-user', deleteUser);
 
 export default router;

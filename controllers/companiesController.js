@@ -16,7 +16,6 @@ export const register = async (req, res) => {
         subscPeriod,
         subscType,
     } = req.body;
-
     const adminMails = admins.replace(/\s/g, '').split(',');
 
     adminMails.map((mail, index) => {

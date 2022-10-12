@@ -13,7 +13,6 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import randToken from 'rand-token';
 
-import sessionDetails from '../models/sessionDetailsSchema.js';
 var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
