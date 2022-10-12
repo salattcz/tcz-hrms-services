@@ -109,6 +109,7 @@ export const addUsers = async (req, res) => {
                 assignedCalendar: userObj.assignedCalendar,
             });
             x++;
+            user.save();
             status = 'success';
             message = 'successfully added';
             user.save();
@@ -285,3 +286,21 @@ export const getAllUsers = async (req, res) => {
         console.log(error);
     }
 };
+
+export const updateUserByAdmin = async (req, res) => {
+    const data = req.body;
+    try {
+        const updatedUser = await users.findByIdAndUpdate(data.userId, {
+            $set: data,
+        });
+        res.send(updatedUser);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const updateUserBySelf = async (req, res) => {
+    try {
+    } catch (error) {}
+};
+

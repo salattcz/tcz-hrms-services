@@ -18,8 +18,8 @@ const companiesSchema = mongoose.Schema(
             contentType: String,
         },
     },
-});
     { timestamps: true }
 );
+
 
 export default mongoose.model('companies', companiesSchema);

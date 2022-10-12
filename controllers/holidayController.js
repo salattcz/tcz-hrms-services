@@ -25,8 +25,8 @@ export const addHolidayCalendar = async (req, res) => {
         // console.log(newArray)
         const newList = {
             holidays: newArray,
-            createdBy: createdBy,
-            calendarName: calendarName,
+            createdBy: holidayDetails[0].createdBy,
+            calendarName: holidayDetails[0].calendarName,
         };
         // console.log(newList)
         const holidays = await holidayCalendar.create(newList);
