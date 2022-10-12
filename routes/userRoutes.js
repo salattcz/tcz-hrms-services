@@ -14,6 +14,7 @@ import {
     getAllUsers,
 } from '../controllers/userController.js';
 
+
 const router = express.Router();
 const storage = multer.diskStorage({
     destination: '/files',

@@ -18,6 +18,7 @@ const companiesSchema = mongoose.Schema(
             contentType: String,
         },
     },
+});
     { timestamps: true }
 );
 
