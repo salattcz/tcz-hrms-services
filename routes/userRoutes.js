@@ -3,6 +3,8 @@ import multer from 'multer';
 
 // import validate from '../helpers/Validation.js';
 // import paramValidation from '../config/paramValidations.js';
+import { updateUserByAdmin } from '../controllers/userController.js';
+import auth from '../middlewares/auth.js';
 
 import { csvtojson } from '../controllers/csvToJsonController.js';
 import {

@@ -8,11 +8,6 @@ import randToken from 'rand-token';
 import users from '../models/userSchema.js';
 import sessionDetails from '../models/sessionDetailsSchema.js';
 
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { v4 as uuid } from 'uuid';
-import randToken from 'rand-token';
-
 var createCsvWriter = csvwriter.createObjectCsvWriter;
 
 export const addUsers = async (req, res) => {
