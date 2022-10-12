@@ -22,6 +22,7 @@ export const register = async (req, res) => {
     adminMails.map((mail, index) => {
         adminMails[index] = { adminMail: mail };
     });
+
     try {
         const sessionId = uuid();
         const existingCompany = await companies.findOne({ email });
@@ -42,6 +43,7 @@ export const register = async (req, res) => {
             { email: newCompany.email, id: newCompany._id },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
+
         );
         const refreshToken = randToken.uid(56);
         const refreshTokenExpiry = moment().add(180, 'days');

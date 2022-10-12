@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const SessionDetailSchema = mongoose.Schema(
     {
         sessionId: { type: String, required: true },
-        companyId: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'companies',
+            ref: 'users',
             required: true,
         },
         accessToken: { type: String, required: true },

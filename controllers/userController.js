@@ -1,8 +1,8 @@
 import csv from 'csvtojson';
 import moment from 'moment/moment.js';
 import csvwriter from 'csv-writer';
-
 import users from '../models/userSchema.js';
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
@@ -118,7 +118,49 @@ export const addUsers = async (req, res) => {
                 .writeRecords(records)
                 .then(() => console.log('Data uploaded into csv successfully'));
         }
-        return res.json('success');
+        res.json('success');
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+export const addSingleUser = async (req, res) => {
+    const {
+        name,
+        dob,
+        gender,
+        email,
+        department,
+        mobileNumber,
+        username,
+        jobTitle,
+        role,
+    } = req.body;
+    try {
+        let existingUser = await users.findOne({
+            'contactDetails.email': email,
+        });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+        const dobFinal = moment.utc(dob, 'DD-MM-YYYY').toDate();
+        const user = await users.create({
+            name: name,
+            role: role,
+            gender: gender,
+            dob: dobFinal,
+            contactDetails: {
+                email: email,
+                username: username,
+                mobileNumber: mobileNumber,
+            },
+            jobTitle: jobTitle,
+            department: department,
+            password: name.split(' ')[0].toLowerCase() + 123,
+        });
+        user.save();
+        res.status(200).json({ message: 'Success' });
     } catch (error) {
         console.log(error);
         res.status(400).json(error.message);
@@ -155,12 +197,74 @@ export const adminLogin = async (req, res) => {
 
         await sessionDetails.create({
             sessionId,
-            companyId: existingUser._id,
+            userId: existingUser._id,
             accessToken: token,
             refreshToken,
             refreshTokenExpiry,
         });
         res.status(200).json({ result: existingUser, token, refreshToken });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const employeeLogin = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        let existingUser = await users.findOne({
+            'contactDetails.email': email,
+        });
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (existingUser.role !== 'employee') {
+            return res
+                .status(400)
+                .json({ message: 'User is not registered as employee' });
+        }
+        if (password !== existingUser.password) {
+            return res.status(400).json({ message: 'Invalid password' });
+        }
+        const token = jwt.sign(
+            { email: existingUser.contactDetails.email, id: existingUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        const sessionId = uuid();
+        const refreshToken = randToken.uid(56);
+        const refreshTokenExpiry = moment().add(180, 'days');
+
+        await sessionDetails.create({
+            sessionId,
+            userId: existingUser._id,
+            accessToken: token,
+            refreshToken,
+            refreshTokenExpiry,
+        });
+        const userRole = existingUser.role;
+        res.status(200).json({
+            result: existingUser,
+            userRole,
+            token,
+            refreshToken,
+        });
+    } catch (error) {}
+};
+
+export const deleteUser = async (req, res) => {
+    const { email, userId } = req.body;
+    try {
+        //    const user = await users.find({ $and: [{'contactDetails.email':email}, {_id:userId} ]})
+        const existedUser = await users.findOne({
+            'contactDetails.email': email,
+        });
+        if (!existedUser) {
+            return res.status(400).json({ message: "User doesn't exists" });
+        }
+        const updatedUser = await users.findByIdAndUpdate(userId, {
+            $set: { isActive: false },
+        });
+        res.status(200).json(updatedUser);
     } catch (error) {
         console.log(error);
     }
