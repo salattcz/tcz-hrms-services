@@ -6,10 +6,11 @@ import crypto from 'crypto';
 export const aesEncryption = async (
     plainText,
     key,
-    outputEncoding = 'base64'
+    outputEncoding
 ) => {
+    const iv = 'aw90rela942f65u2';
     try {
-        const cipher = crypto.createCipheriv('aes-128-ecb', key, null);
+        const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
         return Buffer.concat([
             cipher.update(plainText),
             cipher.final(),
@@ -23,10 +24,11 @@ export const aesEncryption = async (
 export const aesDecryption = async (
     cipherText,
     key,
-    outputEncoding = 'utf8'
+    outputEncoding
 ) => {
-    const cipher = crypto.createDecipheriv('aes-128-ecb', key, null);
-    return Buffer.concat([cipher.update(cipherText), cipher.final()]).toString(
+    const iv = 'aw90rela942f65u2';
+    const cipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    return Buffer.concat([cipher.update(cipherText, 'base64'), cipher.final()]).toString(
         outputEncoding
     );
 };
